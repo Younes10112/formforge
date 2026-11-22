@@ -540,7 +540,9 @@ export class FormStateService {
       }
     };
     this.setForm(emptyForm);
-    this.saveCurrentForm();
+    this.selectedSectionId.set(null);
+    this.selectedFieldId.set(null);
+    this.isDirty.set(false);
   }
 
   private markDirty(): void {
