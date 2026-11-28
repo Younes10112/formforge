@@ -1,272 +1,272 @@
 import { FormConfiguration } from '../models/form-config.model';
 
 export const STARTER_TEMPLATES: FormConfiguration[] = [
-  {
-    id: 'enterprise-journal-entry',
-    title: 'Enterprise Journal Entry',
-    description: 'High-density 4-column accounting journal entry voucher form',
-    version: '1.0.0',
-    sections: [],
-    fields: [
-      {
-        id: 'doc-no',
-        type: 'text',
-        name: 'documentNo',
-        label: 'Document No.',
-        defaultValue: 'JVE-260000062',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: [{ type: 'required', message: 'Document No. is required' }]
-      },
-      {
-        id: 'ref-no',
-        type: 'text',
-        name: 'referenceNo',
-        label: 'Reference No',
-        placeholder: 'Enter Reference No',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'trans-type',
-        type: 'select',
-        name: 'transactionType',
-        label: 'Transaction Type',
-        required: true,
-        defaultValue: 'jve',
-        options: [
-          { label: 'JVE - Journal Entry', value: 'jve' },
-          { label: 'PV - Payment Voucher', value: 'pv' },
-          { label: 'RV - Receipt Voucher', value: 'rv' }
-        ],
-        appearance: { width: '1/4', density: 'compact' },
-        validators: [{ type: 'required', message: 'Transaction Type is required' }]
-      },
-      {
-        id: 'trans-date',
-        type: 'date',
-        name: 'date',
-        label: 'Date',
-        required: true,
-        defaultValue: '2026-08-30',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: [{ type: 'required', message: 'Date is required' }]
-      },
-      {
-        id: 'narration',
-        type: 'text',
-        name: 'narration',
-        label: 'Narration',
-        defaultValue: 'JVE - Journal Entry JVE-260000062',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'currency',
-        type: 'select',
-        name: 'currency',
-        label: 'Currency',
-        required: true,
-        defaultValue: 'sar',
-        options: [
-          { label: 'SAR - Saudi Riyal', value: 'sar' },
-          { label: 'USD - US Dollar', value: 'usd' },
-          { label: 'EUR - Euro', value: 'eur' },
-          { label: 'AED - UAE Dirham', value: 'aed' }
-        ],
-        appearance: { width: '1/4', density: 'compact' },
-        validators: [{ type: 'required', message: 'Currency is required' }]
-      },
-      {
-        id: 'exchange-rate',
-        type: 'number',
-        name: 'exchangeRate',
-        label: 'Exchange Rate (SAR)',
-        defaultValue: 1.0,
-        step: 0.0001,
-        appearance: { width: '1/4', density: 'compact' },
-        validators: [{ type: 'required', message: 'Exchange rate is required' }]
-      },
-      {
-        id: 'fin-batch',
-        type: 'select',
-        name: 'financialBatch',
-        label: 'Financial Batch',
-        defaultValue: '163',
-        options: [
-          { label: '163 - test', value: '163' },
-          { label: '164 - production batch', value: '164' }
-        ],
-        appearance: { width: '1/4', density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'notes',
-        type: 'text',
-        name: 'notes',
-        label: 'Notes',
-        placeholder: 'Notes ...',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'status',
-        type: 'text',
-        name: 'status',
-        label: 'Status',
-        defaultValue: 'Posted',
-        appearance: { width: '1/4', density: 'compact' },
-        validators: []
-      }
-    ],
-    settings: {
-      submitButtonText: 'Post Journal Entry',
-      showResetButton: true,
-      resetButtonText: 'Clear',
-      layout: 'vertical',
-      density: 'compact',
-      theme: 'classic'
-    }
-  },
-  {
-    id: 'enterprise-master-data',
-    title: 'Enterprise Master Data',
-    description: 'ERP dimension master data configuration with inline horizontal labels',
-    version: '1.0.0',
-    sections: [],
-    fields: [
-      {
-        id: 'dim-type',
-        type: 'select',
-        name: 'dimensionType',
-        label: 'Dimension Type',
-        defaultValue: 'lob',
-        options: [
-          { label: 'Line of business', value: 'lob' },
-          { label: 'Cost Center', value: 'cc' },
-          { label: 'Project', value: 'proj' }
-        ],
-        appearance: { width: 'full', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'parent-dim',
-        type: 'select',
-        name: 'parentDimension',
-        label: 'Parent Dimension',
-        placeholder: 'Select Parent Dimension',
-        options: [
-          { label: 'Corporate Office', value: 'corp' },
-          { label: 'Operations Division', value: 'ops' }
-        ],
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'parent-dim-code',
-        type: 'text',
-        name: 'parentDimensionCode',
-        label: 'Parent Dimension Code',
-        placeholder: 'Select Parent Dimension to Show Code',
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'name',
-        type: 'text',
-        name: 'name',
-        label: 'Name',
-        placeholder: 'Enter a Name',
-        required: true,
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: [{ type: 'required', message: 'Name is required' }]
-      },
-      {
-        id: 'code',
-        type: 'text',
-        name: 'code',
-        label: 'Code',
-        placeholder: 'Enter a Code',
-        required: true,
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
-        validators: [{ type: 'required', message: 'Code is required' }]
-      },
-      {
-        id: 'search-key',
-        type: 'text',
-        name: 'searchKey',
-        label: 'Search Key',
-        placeholder: 'Enter a Search Key',
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'general-type',
-        type: 'select',
-        name: 'generalType',
-        label: 'General Type',
-        required: true,
-        defaultValue: 'na',
-        options: [
-          { label: 'Not Applicable', value: 'na' },
-          { label: 'Financial Unit', value: 'fin' },
-          { label: 'Cost Aggregation', value: 'agg' }
-        ],
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
-        validators: [{ type: 'required', message: 'General type is required' }]
-      },
-      {
-        id: 'level',
-        type: 'number',
-        name: 'level',
-        label: 'Level',
-        required: true,
-        defaultValue: 0,
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: [{ type: 'required', message: 'Level is required' }]
-      },
-      {
-        id: 'print-seq',
-        type: 'number',
-        name: 'printSequence',
-        label: 'Print Sequence',
-        defaultValue: 0,
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'responsible',
-        type: 'select',
-        name: 'personResponsible',
-        label: 'Person Responsible',
-        placeholder: 'Enter value',
-        options: [
-          { label: 'Finance Director', value: 'fd' },
-          { label: 'Lead Accountant', value: 'la' }
-        ],
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
-        validators: []
-      },
-      {
-        id: 'description',
-        type: 'textarea',
-        name: 'description',
-        label: 'Description',
-        placeholder: 'Description',
-        rows: 2,
-        appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
-        validators: []
-      }
-    ],
-    settings: {
-      submitButtonText: 'Save Master Record',
-      showResetButton: true,
-      resetButtonText: 'Discard',
-      layout: 'horizontal',
-      density: 'compact',
-      labelWidth: 150,
-      theme: 'classic'
-    }
-  },
+  // {
+  //   id: 'enterprise-journal-entry',
+  //   title: 'Enterprise Journal Entry',
+  //   description: 'High-density 4-column accounting journal entry voucher form',
+  //   version: '1.0.0',
+  //   sections: [],
+  //   fields: [
+  //     {
+  //       id: 'doc-no',
+  //       type: 'text',
+  //       name: 'documentNo',
+  //       label: 'Document No.',
+  //       defaultValue: 'JVE-260000062',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Document No. is required' }]
+  //     },
+  //     {
+  //       id: 'ref-no',
+  //       type: 'text',
+  //       name: 'referenceNo',
+  //       label: 'Reference No',
+  //       placeholder: 'Enter Reference No',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'trans-type',
+  //       type: 'select',
+  //       name: 'transactionType',
+  //       label: 'Transaction Type',
+  //       required: true,
+  //       defaultValue: 'jve',
+  //       options: [
+  //         { label: 'JVE - Journal Entry', value: 'jve' },
+  //         { label: 'PV - Payment Voucher', value: 'pv' },
+  //         { label: 'RV - Receipt Voucher', value: 'rv' }
+  //       ],
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Transaction Type is required' }]
+  //     },
+  //     {
+  //       id: 'trans-date',
+  //       type: 'date',
+  //       name: 'date',
+  //       label: 'Date',
+  //       required: true,
+  //       defaultValue: '2026-08-30',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Date is required' }]
+  //     },
+  //     {
+  //       id: 'narration',
+  //       type: 'text',
+  //       name: 'narration',
+  //       label: 'Narration',
+  //       defaultValue: 'JVE - Journal Entry JVE-260000062',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'currency',
+  //       type: 'select',
+  //       name: 'currency',
+  //       label: 'Currency',
+  //       required: true,
+  //       defaultValue: 'sar',
+  //       options: [
+  //         { label: 'SAR - Saudi Riyal', value: 'sar' },
+  //         { label: 'USD - US Dollar', value: 'usd' },
+  //         { label: 'EUR - Euro', value: 'eur' },
+  //         { label: 'AED - UAE Dirham', value: 'aed' }
+  //       ],
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Currency is required' }]
+  //     },
+  //     {
+  //       id: 'exchange-rate',
+  //       type: 'number',
+  //       name: 'exchangeRate',
+  //       label: 'Exchange Rate (SAR)',
+  //       defaultValue: 1.0,
+  //       step: 0.0001,
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Exchange rate is required' }]
+  //     },
+  //     {
+  //       id: 'fin-batch',
+  //       type: 'select',
+  //       name: 'financialBatch',
+  //       label: 'Financial Batch',
+  //       defaultValue: '163',
+  //       options: [
+  //         { label: '163 - test', value: '163' },
+  //         { label: '164 - production batch', value: '164' }
+  //       ],
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'notes',
+  //       type: 'text',
+  //       name: 'notes',
+  //       label: 'Notes',
+  //       placeholder: 'Notes ...',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'status',
+  //       type: 'text',
+  //       name: 'status',
+  //       label: 'Status',
+  //       defaultValue: 'Posted',
+  //       appearance: { width: '1/4', density: 'compact' },
+  //       validators: []
+  //     }
+  //   ],
+  //   settings: {
+  //     submitButtonText: 'Post Journal Entry',
+  //     showResetButton: true,
+  //     resetButtonText: 'Clear',
+  //     layout: 'vertical',
+  //     density: 'compact',
+  //     theme: 'classic'
+  //   }
+  // },
+  // {
+  //   id: 'enterprise-master-data',
+  //   title: 'Enterprise Master Data',
+  //   description: 'ERP dimension master data configuration with inline horizontal labels',
+  //   version: '1.0.0',
+  //   sections: [],
+  //   fields: [
+  //     {
+  //       id: 'dim-type',
+  //       type: 'select',
+  //       name: 'dimensionType',
+  //       label: 'Dimension Type',
+  //       defaultValue: 'lob',
+  //       options: [
+  //         { label: 'Line of business', value: 'lob' },
+  //         { label: 'Cost Center', value: 'cc' },
+  //         { label: 'Project', value: 'proj' }
+  //       ],
+  //       appearance: { width: 'full', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'parent-dim',
+  //       type: 'select',
+  //       name: 'parentDimension',
+  //       label: 'Parent Dimension',
+  //       placeholder: 'Select Parent Dimension',
+  //       options: [
+  //         { label: 'Corporate Office', value: 'corp' },
+  //         { label: 'Operations Division', value: 'ops' }
+  //       ],
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'parent-dim-code',
+  //       type: 'text',
+  //       name: 'parentDimensionCode',
+  //       label: 'Parent Dimension Code',
+  //       placeholder: 'Select Parent Dimension to Show Code',
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'name',
+  //       type: 'text',
+  //       name: 'name',
+  //       label: 'Name',
+  //       placeholder: 'Enter a Name',
+  //       required: true,
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Name is required' }]
+  //     },
+  //     {
+  //       id: 'code',
+  //       type: 'text',
+  //       name: 'code',
+  //       label: 'Code',
+  //       placeholder: 'Enter a Code',
+  //       required: true,
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Code is required' }]
+  //     },
+  //     {
+  //       id: 'search-key',
+  //       type: 'text',
+  //       name: 'searchKey',
+  //       label: 'Search Key',
+  //       placeholder: 'Enter a Search Key',
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'general-type',
+  //       type: 'select',
+  //       name: 'generalType',
+  //       label: 'General Type',
+  //       required: true,
+  //       defaultValue: 'na',
+  //       options: [
+  //         { label: 'Not Applicable', value: 'na' },
+  //         { label: 'Financial Unit', value: 'fin' },
+  //         { label: 'Cost Aggregation', value: 'agg' }
+  //       ],
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
+  //       validators: [{ type: 'required', message: 'General type is required' }]
+  //     },
+  //     {
+  //       id: 'level',
+  //       type: 'number',
+  //       name: 'level',
+  //       label: 'Level',
+  //       required: true,
+  //       defaultValue: 0,
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: [{ type: 'required', message: 'Level is required' }]
+  //     },
+  //     {
+  //       id: 'print-seq',
+  //       type: 'number',
+  //       name: 'printSequence',
+  //       label: 'Print Sequence',
+  //       defaultValue: 0,
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'responsible',
+  //       type: 'select',
+  //       name: 'personResponsible',
+  //       label: 'Person Responsible',
+  //       placeholder: 'Enter value',
+  //       options: [
+  //         { label: 'Finance Director', value: 'fd' },
+  //         { label: 'Lead Accountant', value: 'la' }
+  //       ],
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 150, density: 'compact' },
+  //       validators: []
+  //     },
+  //     {
+  //       id: 'description',
+  //       type: 'textarea',
+  //       name: 'description',
+  //       label: 'Description',
+  //       placeholder: 'Description',
+  //       rows: 2,
+  //       appearance: { width: '1/2', labelPosition: 'left', labelWidth: 160, density: 'compact' },
+  //       validators: []
+  //     }
+  //   ],
+  //   settings: {
+  //     submitButtonText: 'Save Master Record',
+  //     showResetButton: true,
+  //     resetButtonText: 'Discard',
+  //     layout: 'horizontal',
+  //     density: 'compact',
+  //     labelWidth: 150,
+  //     theme: 'classic'
+  //   }
+  // },
   {
     id: 'employee-registration',
     title: 'Employee Registration',
