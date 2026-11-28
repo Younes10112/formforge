@@ -6,7 +6,7 @@ import {
   inject,
   signal
 } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormField, FormSection } from '../../core/models/form-config.model';
 import { DynamicFormService } from '../../core/services/dynamic-form.service';
 import { FormStateService } from '../../core/services/form-state.service';
@@ -255,10 +255,11 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 export class PreviewComponent {
   readonly formState = inject(FormStateService);
   private readonly dynamicFormService = inject(DynamicFormService);
+  private readonly fb = inject(FormBuilder);
   private readonly toast = inject(ToastService);
 
   readonly previewWidth = signal<'desktop' | 'tablet' | 'mobile'>('desktop');
-  readonly formGroup = signal<FormGroup>(new FormGroup({}));
+  readonly formGroup = signal<FormGroup>(this.fb.group({}));
   readonly visibilityMap = signal<Record<string, boolean>>({});
   readonly requiredMap = signal<Record<string, boolean>>({});
   readonly lastSubmission = signal<unknown | null>(null);

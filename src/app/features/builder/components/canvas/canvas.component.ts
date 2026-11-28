@@ -117,7 +117,7 @@ import { CanvasFieldComponent } from '../canvas-field/canvas-field.component';
           </div>
 
           <!-- CDK Drop Lists Container -->
-          <div class="flex flex-col">
+          <div class="flex flex-col pb-20">
             <!-- Form Sections (if any) -->
             @for (section of formState.sections(); track section.id; let sIdx = $index) {
               <div
@@ -281,7 +281,8 @@ export class CanvasComponent {
         return 'max-w-[768px]';
       case 'desktop':
       default:
-        return 'max-w-[860px]';
+        // return 'max-w-[860px]';
+        return 'w-full';
     }
   });
 

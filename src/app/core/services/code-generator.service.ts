@@ -39,7 +39,7 @@ export class CodeGeneratorService {
       f => f.conditionalLogic?.enabled && f.conditionalLogic.rules?.length
     );
 
-    // Build FormControls
+    // Build FormControls using FormBuilder
     const controlsCode = inputFields
       .map(field => {
         const valArray: string[] = [];
@@ -75,14 +75,16 @@ export class CodeGeneratorService {
         }
 
         const defaultValue = this.formatDefaultValue(field);
-        const validatorsStr =
-          valArray.length > 0 ? `\n      validators: [${valArray.join(', ')}],` : '';
+        const valueExpr = field.disabled
+          ? `{ value: ${defaultValue}, disabled: true }`
+          : defaultValue;
 
-        return `    ${field.name}: new FormControl<${this.getTypeScriptType(field)}>(${defaultValue}, {${validatorsStr}
-      nonNullable: true
-    })`;
+        if (valArray.length > 0) {
+          return `    ${field.name}: [${valueExpr}, [${valArray.join(', ')}]]`;
+        }
+        return `    ${field.name}: [${valueExpr}]`;
       })
-      .join(',\n\n');
+      .join(',\n');
 
     const hasFileFields = inputFields.some(f => f.type === 'file');
     let fileHandlerMethod = '';
@@ -200,8 +202,8 @@ ${evaluationRules}
 
     const componentClass = this.toPascalCase(config.id || 'GeneratedForm') + 'Component';
 
-    const content = `import { Component, OnInit, output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+    const content = `import { Component, inject, OnInit, output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ${this.toPascalCase(config.id || 'GeneratedForm')}Model } from './generated-form.model';
 
 @Component({
@@ -211,14 +213,24 @@ import { ${this.toPascalCase(config.id || 'GeneratedForm')}Model } from './gener
   styleUrl: './generated-form.component.css'
 })
 export class ${componentClass} implements OnInit {
+  private readonly fb = inject(FormBuilder);
+
   formSubmit = output<${this.toPascalCase(config.id || 'GeneratedForm')}Model>();
   formReset = output<void>();${filePreviewState}
 
-  form = new FormGroup({
-${controlsCode}
-  });
+  form!: FormGroup;
 ${conditionalLogicMethod}
-  ngOnInit(): void {${conditionalLogicOnInit}
+
+  ngOnInit(): void {
+    // Init FormGroup With FromBuilder
+    this.initForm();
+  ${conditionalLogicOnInit}
+  }
+
+  initForm(){
+    this.form = this.fb.group({
+      ${controlsCode}
+    });   
   }
 
   onSubmit(): void {
@@ -248,6 +260,21 @@ ${conditionalLogicMethod}
   generateComponentHtml(config: FormConfiguration): GeneratedFile {
     let formBodyHtml = '';
 
+    const renderDescription = (value: string | null, type: 'root'|'section') =>{
+      if(!!value){
+        if(type == 'section'){
+          return `<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">${this.escapeHtml(value || '')}</p>`
+        }
+        if(type == 'root'){
+          return `<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${this.escapeHtml(value || '')}</p>`;
+        } else{
+          return '';
+        }
+      }else{
+        return ''
+      }
+    }
+
     if (config.sections && config.sections.length > 0) {
       const sectionsHtml = config.sections
         .map(section => {
@@ -262,9 +289,7 @@ ${conditionalLogicMethod}
     <div class="${cardClasses}">
       <div class="mb-5 pb-3 border-b border-gray-100 dark:border-gray-800">
         <h3 class="text-base font-bold text-gray-900 dark:text-white">${this.escapeHtml(section.title)}</h3>
-        @if ('${this.escapeHtml(section.description || '')}') {
-          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">${this.escapeHtml(section.description || '')}</p>
-        }
+        ${renderDescription(this.escapeHtml(section.description || ''),'section')}
       </div>
       <div class="grid grid-cols-12 gap-5">
 ${sectionFieldsHtml}
@@ -302,9 +327,7 @@ ${fieldsHtml}`;
   <!-- Form Header -->
   <div class="mb-8">
     <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${this.escapeHtml(config.title)}</h2>
-    @if ('${this.escapeHtml(config.description || '')}') {
-      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${this.escapeHtml(config.description || '')}</p>
-    }
+    ${renderDescription(this.escapeHtml(config.description || ''),'root')}
   </div>
 
 ${formBodyHtml}
@@ -844,9 +867,13 @@ ${optionsHtml}
       const msg =
         field.validators.find(v => v.type === 'required')?.message ||
         `${field.label || 'This field'} is required.`;
-      errorBlocks.push(`        @if (form.controls.${field.name}.hasError('required')) {
+      errorBlocks.push(`        @if (form.get('${field.name}')?.hasError('required')) {
           <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(msg)}</p>
         }`);
+        
+      // errorBlocks.push(`        @if (form.controls.${field.name}.hasError('required')) {
+      //     <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(msg)}</p>
+      //   }`);
     }
 
     for (const v of field.validators) {
@@ -856,7 +883,7 @@ ${optionsHtml}
       if (v.type === 'minLength') errorKey = 'minlength';
       if (v.type === 'maxLength') errorKey = 'maxlength';
 
-      errorBlocks.push(`        @if (form.controls.${field.name}.hasError('${errorKey}')) {
+      errorBlocks.push(`        @if (form.get('${field.name}')?.hasError('${errorKey}')) {
           <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(v.message)}</p>
         }`);
     }
@@ -864,7 +891,7 @@ ${optionsHtml}
     if (errorBlocks.length === 0) return '';
 
     return `
-      @if (form.controls.${field.name}.touched && form.controls.${field.name}.invalid) {
+      @if (form.get('${field.name}')?.touched && form.get('${field.name}')?.invalid) {
 ${errorBlocks.join('\n')}
       }`;
   }

@@ -63,11 +63,14 @@ describe('CodeGeneratorService', () => {
 
     const ts = service.generateComponentTs(config);
     expect(ts.name).toBe('generated-form.component.ts');
-    expect(ts.content).toContain("import { Component, OnInit, output } from '@angular/core'");
+    expect(ts.content).toContain("import { Component, inject, OnInit, output } from '@angular/core'");
+    expect(ts.content).toContain('FormBuilder');
     expect(ts.content).toContain('ReactiveFormsModule');
     expect(ts.content).toContain('export class ContactFormComponent');
-    expect(ts.content).toContain('email: new FormControl<string>');
-    expect(ts.content).toContain('age: new FormControl<number>');
+    expect(ts.content).toContain('private readonly fb = inject(FormBuilder);');
+    expect(ts.content).toContain('form = this.fb.group({');
+    expect(ts.content).toContain("email: ['', [Validators.required, Validators.email]]");
+    expect(ts.content).toContain('age: [18, [Validators.min(18)]]');
     expect(ts.content).toContain('Validators.required');
     expect(ts.content).toContain('Validators.email');
     expect(ts.content).toContain('Validators.min(18)');

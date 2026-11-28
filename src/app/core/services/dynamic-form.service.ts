@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { inject, Injectable } from '@angular/core';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import {
   ConditionalLogic,
   ConditionalRule,
@@ -19,8 +19,10 @@ export interface FormInstanceState {
   providedIn: 'root'
 })
 export class DynamicFormService {
+  private readonly fb = inject(FormBuilder);
+
   buildFormGroup(config: FormConfiguration): FormGroup {
-    const group: Record<string, FormControl> = {};
+    const group: Record<string, [{ value: unknown; disabled: boolean }, ValidatorFn[]]> = {};
 
     for (const field of config.fields) {
       // Layout fields do not create form controls
@@ -31,14 +33,35 @@ export class DynamicFormService {
       const initialValue = this.resolveDefaultValue(field);
       const validators = this.buildValidators(field.validators, field.required);
 
-      group[field.name] = new FormControl(
+      group[field.name] = [
         { value: initialValue, disabled: !!field.disabled },
-        { validators, nonNullable: false }
-      );
+        validators
+      ];
     }
 
-    return new FormGroup(group);
+    return this.fb.group(group);
   }
+  // Old Version by using Form Control
+  // buildFormGroupOld(config: FormConfiguration): FormGroup {
+  //   const group: Record<string, FormControl> = {};
+
+  //   for (const field of config.fields) {
+  //     // Layout fields do not create form controls
+  //     if (['heading', 'paragraph', 'divider', 'section'].includes(field.type)) {
+  //       continue;
+  //     }
+
+  //     const initialValue = this.resolveDefaultValue(field);
+  //     const validators = this.buildValidators(field.validators, field.required);
+
+  //     group[field.name] = new FormControl(
+  //       { value: initialValue, disabled: !!field.disabled },
+  //       { validators, nonNullable: false }
+  //     );
+  //   }
+
+  //   return new FormGroup(group);
+  // }
 
   buildValidators(validations: FieldValidation[], isRequired?: boolean): ValidatorFn[] {
     const fns: ValidatorFn[] = [];

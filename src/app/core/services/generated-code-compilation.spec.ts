@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { STARTER_TEMPLATES } from '../constants/starter-templates';
 import { CodeGeneratorService } from './code-generator.service';
 
@@ -21,7 +21,8 @@ describe('Generated Code Compilation & Integration Test', () => {
     expect(generated.componentHtml.content).toBeTruthy();
 
     // Verify syntax tokens in generated TS
-    expect(generated.componentTs.content).toContain('fullName: new FormControl');
+    expect(generated.componentTs.content).toContain('FormBuilder');
+    expect(generated.componentTs.content).toContain('form = this.fb.group({');
     expect(generated.componentTs.content).toContain('Validators.required');
     expect(generated.componentTs.content).toContain('Validators.email');
 
@@ -59,23 +60,16 @@ describe('Generated Code Compilation & Integration Test', () => {
       `
     })
     class TestCompiledFormComponent {
+      private readonly fb = inject(FormBuilder);
+
       fieldVisibility: Record<string, boolean> = {
         homeTimezone: true
       };
 
-      form = new FormGroup({
-        fullName: new FormControl('', {
-          validators: [Validators.required, Validators.minLength(3)],
-          nonNullable: true
-        }),
-        email: new FormControl('', {
-          validators: [Validators.required, Validators.email],
-          nonNullable: true
-        }),
-        homeTimezone: new FormControl('', {
-          validators: [Validators.required],
-          nonNullable: true
-        })
+      form = this.fb.group({
+        fullName: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        homeTimezone: ['', [Validators.required]]
       });
 
       isSubmitted = false;
