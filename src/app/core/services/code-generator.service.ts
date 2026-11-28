@@ -203,7 +203,7 @@ ${evaluationRules}
     const componentClass = this.toPascalCase(config.id || 'GeneratedForm') + 'Component';
 
     const content = `import { Component, inject, OnInit, output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ${this.toPascalCase(config.id || 'GeneratedForm')}Model } from './generated-form.model';
 
 @Component({
@@ -218,11 +218,19 @@ export class ${componentClass} implements OnInit {
   formSubmit = output<${this.toPascalCase(config.id || 'GeneratedForm')}Model>();
   formReset = output<void>();${filePreviewState}
 
-  form = this.fb.group({
-${controlsCode}
-  });
+  form!: FormGroup;
 ${conditionalLogicMethod}
-  ngOnInit(): void {${conditionalLogicOnInit}
+
+  ngOnInit(): void {
+    // Init FormGroup With FromBuilder
+    this.initForm();
+  ${conditionalLogicOnInit}
+  }
+
+  initForm(){
+    this.form = this.fb.group({
+      ${controlsCode}
+    });   
   }
 
   onSubmit(): void {
@@ -252,6 +260,21 @@ ${conditionalLogicMethod}
   generateComponentHtml(config: FormConfiguration): GeneratedFile {
     let formBodyHtml = '';
 
+    const renderDescription = (value: string | null, type: 'root'|'section') =>{
+      if(!!value){
+        if(type == 'section'){
+          return `<p class="mt-1 text-xs text-gray-500 dark:text-gray-400">${this.escapeHtml(value || '')}</p>`
+        }
+        if(type == 'root'){
+          return `<p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${this.escapeHtml(value || '')}</p>`;
+        } else{
+          return '';
+        }
+      }else{
+        return ''
+      }
+    }
+
     if (config.sections && config.sections.length > 0) {
       const sectionsHtml = config.sections
         .map(section => {
@@ -266,9 +289,7 @@ ${conditionalLogicMethod}
     <div class="${cardClasses}">
       <div class="mb-5 pb-3 border-b border-gray-100 dark:border-gray-800">
         <h3 class="text-base font-bold text-gray-900 dark:text-white">${this.escapeHtml(section.title)}</h3>
-        @if ('${this.escapeHtml(section.description || '')}') {
-          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">${this.escapeHtml(section.description || '')}</p>
-        }
+        ${renderDescription(this.escapeHtml(section.description || ''),'section')}
       </div>
       <div class="grid grid-cols-12 gap-5">
 ${sectionFieldsHtml}
@@ -306,9 +327,7 @@ ${fieldsHtml}`;
   <!-- Form Header -->
   <div class="mb-8">
     <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${this.escapeHtml(config.title)}</h2>
-    @if ('${this.escapeHtml(config.description || '')}') {
-      <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">${this.escapeHtml(config.description || '')}</p>
-    }
+    ${renderDescription(this.escapeHtml(config.description || ''),'root')}
   </div>
 
 ${formBodyHtml}
@@ -848,9 +867,13 @@ ${optionsHtml}
       const msg =
         field.validators.find(v => v.type === 'required')?.message ||
         `${field.label || 'This field'} is required.`;
-      errorBlocks.push(`        @if (form.controls.${field.name}.hasError('required')) {
+      errorBlocks.push(`        @if (form.get('${field.name}')?.hasError('required')) {
           <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(msg)}</p>
         }`);
+        
+      // errorBlocks.push(`        @if (form.controls.${field.name}.hasError('required')) {
+      //     <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(msg)}</p>
+      //   }`);
     }
 
     for (const v of field.validators) {
@@ -860,7 +883,7 @@ ${optionsHtml}
       if (v.type === 'minLength') errorKey = 'minlength';
       if (v.type === 'maxLength') errorKey = 'maxlength';
 
-      errorBlocks.push(`        @if (form.controls.${field.name}.hasError('${errorKey}')) {
+      errorBlocks.push(`        @if (form.get('${field.name}')?.hasError('${errorKey}')) {
           <p class="mt-1.5 text-xs text-red-500">${this.escapeHtml(v.message)}</p>
         }`);
     }
@@ -868,7 +891,7 @@ ${optionsHtml}
     if (errorBlocks.length === 0) return '';
 
     return `
-      @if (form.controls.${field.name}.touched && form.controls.${field.name}.invalid) {
+      @if (form.get('${field.name}')?.touched && form.get('${field.name}')?.invalid) {
 ${errorBlocks.join('\n')}
       }`;
   }
