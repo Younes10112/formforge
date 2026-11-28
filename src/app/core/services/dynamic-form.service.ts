@@ -41,6 +41,27 @@ export class DynamicFormService {
 
     return this.fb.group(group);
   }
+  // Old Version by using Form Control
+  // buildFormGroupOld(config: FormConfiguration): FormGroup {
+  //   const group: Record<string, FormControl> = {};
+
+  //   for (const field of config.fields) {
+  //     // Layout fields do not create form controls
+  //     if (['heading', 'paragraph', 'divider', 'section'].includes(field.type)) {
+  //       continue;
+  //     }
+
+  //     const initialValue = this.resolveDefaultValue(field);
+  //     const validators = this.buildValidators(field.validators, field.required);
+
+  //     group[field.name] = new FormControl(
+  //       { value: initialValue, disabled: !!field.disabled },
+  //       { validators, nonNullable: false }
+  //     );
+  //   }
+
+  //   return new FormGroup(group);
+  // }
 
   buildValidators(validations: FieldValidation[], isRequired?: boolean): ValidatorFn[] {
     const fns: ValidatorFn[] = [];
