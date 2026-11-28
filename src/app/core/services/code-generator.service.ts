@@ -39,7 +39,7 @@ export class CodeGeneratorService {
       f => f.conditionalLogic?.enabled && f.conditionalLogic.rules?.length
     );
 
-    // Build FormControls
+    // Build FormControls using FormBuilder
     const controlsCode = inputFields
       .map(field => {
         const valArray: string[] = [];
@@ -75,14 +75,16 @@ export class CodeGeneratorService {
         }
 
         const defaultValue = this.formatDefaultValue(field);
-        const validatorsStr =
-          valArray.length > 0 ? `\n      validators: [${valArray.join(', ')}],` : '';
+        const valueExpr = field.disabled
+          ? `{ value: ${defaultValue}, disabled: true }`
+          : defaultValue;
 
-        return `    ${field.name}: new FormControl<${this.getTypeScriptType(field)}>(${defaultValue}, {${validatorsStr}
-      nonNullable: true
-    })`;
+        if (valArray.length > 0) {
+          return `    ${field.name}: [${valueExpr}, [${valArray.join(', ')}]]`;
+        }
+        return `    ${field.name}: [${valueExpr}]`;
       })
-      .join(',\n\n');
+      .join(',\n');
 
     const hasFileFields = inputFields.some(f => f.type === 'file');
     let fileHandlerMethod = '';
@@ -200,8 +202,8 @@ ${evaluationRules}
 
     const componentClass = this.toPascalCase(config.id || 'GeneratedForm') + 'Component';
 
-    const content = `import { Component, OnInit, output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+    const content = `import { Component, inject, OnInit, output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ${this.toPascalCase(config.id || 'GeneratedForm')}Model } from './generated-form.model';
 
 @Component({
@@ -211,10 +213,12 @@ import { ${this.toPascalCase(config.id || 'GeneratedForm')}Model } from './gener
   styleUrl: './generated-form.component.css'
 })
 export class ${componentClass} implements OnInit {
+  private readonly fb = inject(FormBuilder);
+
   formSubmit = output<${this.toPascalCase(config.id || 'GeneratedForm')}Model>();
   formReset = output<void>();${filePreviewState}
 
-  form = new FormGroup({
+  form = this.fb.group({
 ${controlsCode}
   });
 ${conditionalLogicMethod}

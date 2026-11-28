@@ -63,7 +63,8 @@ describe('CodeGeneratorService', () => {
 
     const ts = service.generateComponentTs(config);
     expect(ts.name).toBe('generated-form.component.ts');
-    expect(ts.content).toContain("import { Component, OnInit, output } from '@angular/core'");
+    expect(ts.content).toContain("import { Component, inject, OnInit, output } from '@angular/core'");
+    expect(ts.content).toContain('FormBuilder');
     expect(ts.content).toContain('ReactiveFormsModule');
     expect(ts.content).toContain('export class ContactFormComponent');
     expect(ts.content).toContain('email: new FormControl<string>');
