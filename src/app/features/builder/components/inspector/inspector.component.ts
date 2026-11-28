@@ -879,185 +879,214 @@ type InspectorTab = 'general' | 'validation' | 'options' | 'condition' | 'appear
             <app-icon name="x" [size]="14" />
           </button>
         </div>
+        
+        <!-- Form Level Settings Tabs -->
+        <div class="flex border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/40 text-[11px] font-semibold text-gray-500">
+          <button
+            type="button"
+            (click)="formLevelTab.set('content')"
+            [class]="formLevelTab() === 'content' ? 'border-b-2 border-blue-600 text-blue-600 dark:text-white bg-white dark:bg-gray-800' : 'hover:text-gray-900 dark:hover:text-white'"
+            class="flex-1 py-2 text-center transition-colors flex items-center justify-center gap-1.5"
+          >
+            <app-icon name="file-text" [size]="12" />
+            <span>Content & Info</span>
+          </button>
+          <button
+            type="button"
+            (click)="formLevelTab.set('style')"
+            [class]="formLevelTab() === 'style' ? 'border-b-2 border-blue-600 text-blue-600 dark:text-white bg-white dark:bg-gray-800' : 'hover:text-gray-900 dark:hover:text-white'"
+            class="flex-1 py-2 text-center transition-colors flex items-center justify-center gap-1.5"
+          >
+            <app-icon name="palette" [size]="12" />
+            <span>Styling</span>
+          </button>
+        </div>
 
         <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
-          <!-- Form Title -->
-          <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Form Title</label>
-            <input
-              type="text"
-              [ngModel]="formState.form().title"
-              (ngModelChange)="formState.updateFormMeta($event)"
-              class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            />
-          </div>
 
-          <!-- Description -->
-          <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Description</label>
-            <textarea
-              rows="2"
-              [ngModel]="formState.form().description"
-              (ngModelChange)="formState.updateFormMeta(formState.form().title, $event)"
-              class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            ></textarea>
-          </div>
+          @if (formLevelTab() == "content") {
 
-          <!-- Form Global Layout Style (Vertical vs Horizontal ERP) -->
-          <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Form Layout Style</label>
-            <div class="grid grid-cols-2 gap-1.5 text-center">
-              <button
-                type="button"
-                (click)="formState.updateFormSettings({ layout: 'vertical' })"
-                [class]="formState.settings().layout !== 'horizontal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                class="py-2 px-2.5 rounded-lg transition-all text-xs"
-              >
-                Top Labels (Vertical)
-              </button>
-              <button
-                type="button"
-                (click)="formState.updateFormSettings({ layout: 'horizontal' })"
-                [class]="formState.settings().layout === 'horizontal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                class="py-2 px-2.5 rounded-lg transition-all text-xs"
-              >
-                Left Labels (Inline ERP)
-              </button>
-            </div>
-            <p class="mt-1 text-[10px] text-gray-400">Controls default label positioning for all fields in the form.</p>
-          </div>
-
-          <!-- Default Inline Label Width (when horizontal) -->
-          @if (formState.settings().layout === 'horizontal') {
+            <!-- Form Title -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <label class="font-semibold text-gray-700 dark:text-gray-300">Default Label Width</label>
-                <span class="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-semibold">{{ formState.settings().labelWidth || 135 }}px</span>
-              </div>
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Form Title</label>
               <input
-                type="range"
-                min="90"
-                max="220"
-                step="10"
-                [value]="formState.settings().labelWidth || 135"
-                (input)="formState.updateFormSettings({ labelWidth: +$any($event.target).value })"
-                class="w-full accent-blue-600 cursor-pointer h-2 bg-gray-200 rounded-lg dark:bg-gray-700"
+                type="text"
+                [ngModel]="formState.form().title"
+                (ngModelChange)="formState.updateFormMeta($event)"
+                class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               />
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Description</label>
+              <textarea
+                rows="2"
+                [ngModel]="formState.form().description"
+                (ngModelChange)="formState.updateFormMeta(formState.form().title, $event)"
+                class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              ></textarea>
+            </div>
+
+            <!-- Submit Button Text -->
+            <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Submit Button Label</label>
+              <input
+                type="text"
+                [ngModel]="formState.settings().submitButtonText"
+                (ngModelChange)="formState.updateFormSettings({ submitButtonText: $event })"
+                class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              />
+            </div>
+
+            <!-- Reset Button Toggle -->
+            <div class="space-y-2">
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="font-medium text-gray-700 dark:text-gray-300">Show Reset Button</span>
+                <input
+                  type="checkbox"
+                  [ngModel]="formState.settings().showResetButton"
+                  (ngModelChange)="formState.updateFormSettings({ showResetButton: $event })"
+                  class="h-4 w-4 rounded border-gray-300 text-blue-600"
+                />
+              </label>
+  
+              @if (formState.settings().showResetButton) {
+                <div>
+                  <label class="block font-medium text-gray-600 dark:text-gray-400 mb-1">Reset Button Label</label>
+                  <input
+                    type="text"
+                    [ngModel]="formState.settings().resetButtonText || 'Reset'"
+                    (ngModelChange)="formState.updateFormSettings({ resetButtonText: $event })"
+                    class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  />
+                </div>
+              }
             </div>
           }
 
-          <!-- Global Form Density -->
-          <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Field Density / Sizing</label>
-            <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
-              <button
-                type="button"
-                (click)="formState.updateFormSettings({ density: 'compact' })"
-                [class]="(formState.settings().density === 'compact' || !formState.settings().density) ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                class="py-1.5 px-2 rounded-lg transition-all"
-                title="High density ERP style"
-              >
-                Compact (ERP)
-              </button>
-              <button
-                type="button"
-                (click)="formState.updateFormSettings({ density: 'normal' })"
-                [class]="formState.settings().density === 'normal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                class="py-1.5 px-2 rounded-lg transition-all"
-              >
-                Normal
-              </button>
-              <button
-                type="button"
-                (click)="formState.updateFormSettings({ density: 'comfortable' })"
-                [class]="formState.settings().density === 'comfortable' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                class="py-1.5 px-2 rounded-lg transition-all"
-              >
-                Comfortable
-              </button>
-            </div>
-          </div>
+          @if (formLevelTab() == "style") {
 
-          <!-- Main Form Card Padding & Spacing -->
-          <div class="pt-3 border-t border-gray-100 dark:border-gray-800">
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Main Form Card Padding (Inner)</label>
-            <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
-              @for (pad of [
-                { label: 'None (0px)', val: 'none' },
-                { label: 'Compact (16px)', val: 'compact' },
-                { label: 'Normal (24px)', val: 'normal' },
-                { label: 'Comfortable (32px)', val: 'comfortable' },
-                { label: 'Spacious (48px)', val: 'spacious' }
-              ]; track pad.val) {
+            <!-- Form Global Layout Style (Vertical vs Horizontal ERP) -->
+            <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Form Layout Style</label>
+              <div class="grid grid-cols-2 gap-1.5 text-center">
                 <button
                   type="button"
-                  (click)="formState.updateFormSettings({ padding: $any(pad.val) })"
-                  [class]="(formState.settings().padding || 'normal') === pad.val ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                  class="py-1.5 px-1 rounded-lg transition-all text-[10px]"
+                  (click)="formState.updateFormSettings({ layout: 'vertical' })"
+                  [class]="formState.settings().layout !== 'horizontal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                  class="py-2 px-2.5 rounded-lg transition-all text-xs"
                 >
-                  {{ pad.label }}
+                  Top Labels (Vertical)
                 </button>
-              }
-            </div>
-          </div>
-
-          <div>
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Main Form Card Margin (Outer Spacing)</label>
-            <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
-              @for (m of [
-                { label: 'None (0px)', val: 'none' },
-                { label: 'Compact (12px)', val: 'compact' },
-                { label: 'Normal (24px)', val: 'normal' },
-                { label: 'Relaxed (36px)', val: 'relaxed' },
-                { label: 'Spacious (56px)', val: 'spacious' }
-              ]; track m.val) {
                 <button
                   type="button"
-                  (click)="formState.updateFormSettings({ margin: $any(m.val) })"
-                  [class]="(formState.settings().margin || 'normal') === m.val ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
-                  class="py-1.5 px-1 rounded-lg transition-all text-[10px]"
+                  (click)="formState.updateFormSettings({ layout: 'horizontal' })"
+                  [class]="formState.settings().layout === 'horizontal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                  class="py-2 px-2.5 rounded-lg transition-all text-xs"
                 >
-                  {{ m.label }}
+                  Left Labels (Inline ERP)
                 </button>
-              }
+              </div>
+              <p class="mt-1 text-[10px] text-gray-400">Controls default label positioning for all fields in the form.</p>
             </div>
-          </div>
 
-          <!-- Submit Button Text -->
-          <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
-            <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1">Submit Button Label</label>
-            <input
-              type="text"
-              [ngModel]="formState.settings().submitButtonText"
-              (ngModelChange)="formState.updateFormSettings({ submitButtonText: $event })"
-              class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-            />
-          </div>
-
-          <!-- Reset Button Toggle -->
-          <div class="space-y-2">
-            <label class="flex items-center justify-between cursor-pointer">
-              <span class="font-medium text-gray-700 dark:text-gray-300">Show Reset Button</span>
-              <input
-                type="checkbox"
-                [ngModel]="formState.settings().showResetButton"
-                (ngModelChange)="formState.updateFormSettings({ showResetButton: $event })"
-                class="h-4 w-4 rounded border-gray-300 text-blue-600"
-              />
-            </label>
-
-            @if (formState.settings().showResetButton) {
+            <!-- Default Inline Label Width (when horizontal) -->
+            @if (formState.settings().layout === 'horizontal') {
               <div>
-                <label class="block font-medium text-gray-600 dark:text-gray-400 mb-1">Reset Button Label</label>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="font-semibold text-gray-700 dark:text-gray-300">Default Label Width</label>
+                  <span class="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-semibold">{{ formState.settings().labelWidth || 135 }}px</span>
+                </div>
                 <input
-                  type="text"
-                  [ngModel]="formState.settings().resetButtonText || 'Reset'"
-                  (ngModelChange)="formState.updateFormSettings({ resetButtonText: $event })"
-                  class="w-full px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                  type="range"
+                  min="90"
+                  max="220"
+                  step="10"
+                  [value]="formState.settings().labelWidth || 135"
+                  (input)="formState.updateFormSettings({ labelWidth: +$any($event.target).value })"
+                  class="w-full accent-blue-600 cursor-pointer h-2 bg-gray-200 rounded-lg dark:bg-gray-700"
                 />
               </div>
             }
-          </div>
+
+            <!-- Global Form Density -->
+            <div class="pt-2 border-t border-gray-100 dark:border-gray-800">
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Field Density / Sizing</label>
+              <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+                <button
+                  type="button"
+                  (click)="formState.updateFormSettings({ density: 'compact' })"
+                  [class]="(formState.settings().density === 'compact' || !formState.settings().density) ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                  class="py-1.5 px-2 rounded-lg transition-all"
+                  title="High density ERP style"
+                >
+                  Compact (ERP)
+                </button>
+                <button
+                  type="button"
+                  (click)="formState.updateFormSettings({ density: 'normal' })"
+                  [class]="formState.settings().density === 'normal' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                  class="py-1.5 px-2 rounded-lg transition-all"
+                >
+                  Normal
+                </button>
+                <button
+                  type="button"
+                  (click)="formState.updateFormSettings({ density: 'comfortable' })"
+                  [class]="formState.settings().density === 'comfortable' ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                  class="py-1.5 px-2 rounded-lg transition-all"
+                >
+                  Comfortable
+                </button>
+              </div>
+            </div>
+  
+            <!-- Main Form Card Padding & Spacing -->
+            <div class="pt-3 border-t border-gray-100 dark:border-gray-800">
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Main Form Card Padding (Inner)</label>
+              <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+                @for (pad of [
+                  { label: 'None (0px)', val: 'none' },
+                  { label: 'Compact (16px)', val: 'compact' },
+                  { label: 'Normal (24px)', val: 'normal' },
+                  { label: 'Comfortable (32px)', val: 'comfortable' },
+                  { label: 'Spacious (48px)', val: 'spacious' }
+                ]; track pad.val) {
+                  <button
+                    type="button"
+                    (click)="formState.updateFormSettings({ padding: $any(pad.val) })"
+                    [class]="(formState.settings().padding || 'normal') === pad.val ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="py-1.5 px-1 rounded-lg transition-all text-[10px]"
+                  >
+                    {{ pad.label }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700 dark:text-gray-300 mb-1.5">Main Form Card Margin (Outer Spacing)</label>
+              <div class="grid grid-cols-3 gap-1.5 text-center text-xs">
+                @for (m of [
+                  { label: 'None (0px)', val: 'none' },
+                  { label: 'Compact (12px)', val: 'compact' },
+                  { label: 'Normal (24px)', val: 'normal' },
+                  { label: 'Relaxed (36px)', val: 'relaxed' },
+                  { label: 'Spacious (56px)', val: 'spacious' }
+                ]; track m.val) {
+                  <button
+                    type="button"
+                    (click)="formState.updateFormSettings({ margin: $any(m.val) })"
+                    [class]="(formState.settings().margin || 'normal') === m.val ? 'bg-blue-600 text-white font-semibold shadow-xs' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'"
+                    class="py-1.5 px-1 rounded-lg transition-all text-[10px]"
+                  >
+                    {{ m.label }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
         </div>
       }
     </aside>
@@ -1071,6 +1100,7 @@ export class InspectorComponent {
   readonly field = computed(() => this.formState.selectedField());
   readonly section = computed(() => this.formState.selectedSection());
   readonly sectionTab = signal<'content' | 'style'>('style');
+  readonly formLevelTab = signal<'content' | 'style'>('content');
 
   readonly widthOptions: { label: string; value: FieldWidth }[] = [
     { label: '100%', value: 'full' },

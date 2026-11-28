@@ -158,7 +158,7 @@ import { IconComponent } from '../../../../shared/components/icon/icon.component
               <hr class="border-gray-200 dark:border-gray-700" />
             }
             @default {
-              <div class="w-full h-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 px-2.5 flex items-center text-[11px] text-gray-400">
+              <div class="w-full h-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 px-2.5 flex items-center text-[11px] text-gray-400 wrap-anywhere">
                 {{ field().placeholder || 'Enter ' + field().label + '...' }}
               </div>
             }
